@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', {packages: ['corechart'], 'language': 'fr'});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart(){
+            var data = new google.visualization.DataTable();
+            data.addColumn('string','Element');
+            data.addColumn('number','Percentage');
+            data.addRows([
+                ['Nitrogen',0.68],
+                ['Oxygen',0.21],
+                ['Other',0.11]
+            ]);
+
+            var chart = new google.visualization.PieChart(document.getElementById('myPieChart'));
+            chart.draw(data,null);
+        }
+    </script>
+</head>
+<body>
+    <div id="myPieChart"/>
+</body>
+</html>
