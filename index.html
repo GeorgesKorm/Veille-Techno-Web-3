@@ -34,6 +34,9 @@
 
 <body>
     <div style="margin:auto; width:96%;text-align: center;">
+        <!-- <h1>
+            Historique des tempêtes de l'atlantique entre 2000 et 2023
+        </h1>         -->
         <div id="graphContainer" style="margin:auto;"></div>
     </div>
     <div>
@@ -143,9 +146,34 @@
     }
 
     async function drawGraph() {
+        var options = {
+            title: "Historique des tempêtes de l'Atlantique entre "+$("#start").val() + " et " + $("#end").val()  ,
+            titleTextStyle: { fontSize: '28', color: 'black' },
+            vAxis: {verticalScale},
+            hAxis: { format: '####' },
+            series: { 0: { lineWidth: 4 }, 1: { lineWidth: 4 } },
+            legend: { position: 'top' },
+            colors: ['green', 'orange', 'red'],
+        };
         dataRows = [];
         hurricanesData = await GetHurricanesData();
-        // todo 
+        data = new google.visualization.DataTable();
+        data.addColumn('number','Année');
+        data.addColumn('number', 'Tempêtes tropicales');
+        data.addColumn('number', 'Ouragans mineurs (catégories 1 et 2)');
+        data.addColumn('number', 'Ouragans majeurs (catégorie 3 à 5)');
+        for(i=0; i < Object.keys(hurricanesData).length; i++){
+            currentHurricaneData = hurricanesData[i];
+            currentYear = currentHurricaneData['Year'];
+            currentStorm = currentHurricaneData['Storm'];
+            currentMinors = currentHurricaneData['Cat1']+currentHurricaneData['Cat2'];
+            currentMajors = currentHurricaneData['Cat3']+ currentHurricaneData['Cat4']+currentHurricaneData['Cat5'];
+
+            data.addRow([currentYear, currentStorm, currentMinors, currentMajors]);
+
+        }
+        chart = new google.visualization.ColumnChart(document.getElementById('graphContainer'))
+        chart.draw(data,options)
     };
 
     function GetHurricanesData() {
