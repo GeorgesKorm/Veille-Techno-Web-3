@@ -155,24 +155,55 @@
             legend: { position: 'top' },
             colors: ['green', 'orange', 'red'],
         };
-        dataRows = [];
         hurricanesData = await GetHurricanesData();
         data = new google.visualization.DataTable();
         data.addColumn('number','Année');
         data.addColumn('number', 'Tempêtes tropicales');
         data.addColumn('number', 'Ouragans mineurs (catégories 1 et 2)');
         data.addColumn('number', 'Ouragans majeurs (catégorie 3 à 5)');
+        var dataRows = [];
+
         for(i=0; i < Object.keys(hurricanesData).length; i++){
             currentHurricaneData = hurricanesData[i];
             currentYear = currentHurricaneData['Year'];
             currentStorm = currentHurricaneData['Storm'];
             currentMinors = currentHurricaneData['Cat1']+currentHurricaneData['Cat2'];
             currentMajors = currentHurricaneData['Cat3']+ currentHurricaneData['Cat4']+currentHurricaneData['Cat5'];
-
-            data.addRow([currentYear, currentStorm, currentMinors, currentMajors]);
-
+            dataRows = [currentYear];
+            if(showStorm == true){
+                dataRows.push(currentStorm);
+            }
+            else{
+                dataRows.push(0)
+            }
+            if(showHurricane_12 == true){
+                dataRows.push(currentMinors);
+            }
+            else{
+                dataRows.push(0)
+            }
+            if(showHurricane_345 == true){
+                dataRows.push(currentMajors)
+            }
+            else{
+                dataRows.push(0)
+            }
+            data.addRow(dataRows);
+            // data.addRow([currentYear, currentStorm, currentMinors, currentMajors]);
         }
-        chart = new google.visualization.ColumnChart(document.getElementById('graphContainer'))
+        if(graphStyle == 'bars')
+            chart = new google.visualization.ColumnChart(document.getElementById('graphContainer'))
+        if(graphStyle == 'regions')
+            chart = new google.visualization.AreaChart(document.getElementById('graphContainer'))
+        if(graphStyle == 'curves'){
+            options.curveType = 'function';
+            options.vAxis = { //???
+                viewWindow: { 
+                    min:0
+                }
+            }
+            chart = new google.visualization.LineChart(document.getElementById('graphContainer'))
+        }
         chart.draw(data,options)
     };
 
