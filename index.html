@@ -147,9 +147,9 @@
 
     async function drawGraph() {
         var options = {
-            title: "Historique des tempêtes de l'Atlantique entre "+$("#start").val() + " et " + $("#end").val()  ,
+            title: "Historique des tempêtes de l'Atlantique entre " + $("#start").val() + " et " + $("#end").val(),
             titleTextStyle: { fontSize: '28', color: 'black' },
-            vAxis: {verticalScale},
+            vAxis: { verticalScale },
             hAxis: { format: '####' },
             series: { 0: { lineWidth: 4 }, 1: { lineWidth: 4 } },
             legend: { position: 'top' },
@@ -157,54 +157,63 @@
         };
         hurricanesData = await GetHurricanesData();
         data = new google.visualization.DataTable();
-        data.addColumn('number','Année');
+        data.addColumn('number', 'Année');
         data.addColumn('number', 'Tempêtes tropicales');
         data.addColumn('number', 'Ouragans mineurs (catégories 1 et 2)');
         data.addColumn('number', 'Ouragans majeurs (catégorie 3 à 5)');
         var dataRows = [];
 
-        for(i=0; i < Object.keys(hurricanesData).length; i++){
+        for (i = 0; i < Object.keys(hurricanesData).length; i++) {
             currentHurricaneData = hurricanesData[i];
             currentYear = currentHurricaneData['Year'];
             currentStorm = currentHurricaneData['Storm'];
-            currentMinors = currentHurricaneData['Cat1']+currentHurricaneData['Cat2'];
-            currentMajors = currentHurricaneData['Cat3']+ currentHurricaneData['Cat4']+currentHurricaneData['Cat5'];
+            currentMinors = currentHurricaneData['Cat1'] + currentHurricaneData['Cat2'];
+            currentMajors = currentHurricaneData['Cat3'] + currentHurricaneData['Cat4'] + currentHurricaneData['Cat5'];
             dataRows = [currentYear];
-            if(showStorm == true){
+            if (showStorm == true) {
                 dataRows.push(currentStorm);
             }
-            else{
-                dataRows.push(0)
+            else {
+                dataRows.push(-1)
             }
-            if(showHurricane_12 == true){
+            if (showHurricane_12 == true) {
                 dataRows.push(currentMinors);
             }
-            else{
-                dataRows.push(0)
+            else {
+                dataRows.push(-1)
             }
-            if(showHurricane_345 == true){
+            if (showHurricane_345 == true) {
                 dataRows.push(currentMajors)
             }
-            else{
-                dataRows.push(0)
+            else {
+                dataRows.push(-1)
             }
             data.addRow(dataRows);
             // data.addRow([currentYear, currentStorm, currentMinors, currentMajors]);
         }
-        if(graphStyle == 'bars')
-            chart = new google.visualization.ColumnChart(document.getElementById('graphContainer'))
-        if(graphStyle == 'regions')
-            chart = new google.visualization.AreaChart(document.getElementById('graphContainer'))
-        if(graphStyle == 'curves'){
-            options.curveType = 'function';
-            options.vAxis = { //???
-                viewWindow: { 
-                    min:0
-                }
+        console.log(data)
+        options.vAxis = { //???
+            viewWindow: {
+                min: 0
             }
+        }
+
+        if (graphStyle == 'bars')
+            chart = new google.visualization.ColumnChart(document.getElementById('graphContainer'))
+        if (graphStyle == 'regions')
+            chart = new google.visualization.AreaChart(document.getElementById('graphContainer'))
+        if (graphStyle == 'curves') {
+            options.curveType = 'function';
             chart = new google.visualization.LineChart(document.getElementById('graphContainer'))
         }
-        chart.draw(data,options)
+        chart.draw(data, options)
+        if(showHurricane_12 == false && showHurricane_345 == false && showStorm == false){
+            // data = new google.visualization.DataTable();
+            // data.addColumn('number', 'Année');
+            // data.addRow(dataRows)
+
+            // chart.draw(data,options)
+        }
     };
 
     function GetHurricanesData() {
