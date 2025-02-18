@@ -174,25 +174,24 @@
                 dataRows.push(currentStorm);
             }
             else {
-                dataRows.push(-1)
+                dataRows.push(null)
             }
             if (showHurricane_12 == true) {
                 dataRows.push(currentMinors);
             }
             else {
-                dataRows.push(-1)
+                dataRows.push(null)
             }
             if (showHurricane_345 == true) {
                 dataRows.push(currentMajors)
             }
             else {
-                dataRows.push(-1)
+                dataRows.push(null)
             }
             data.addRow(dataRows);
-            // data.addRow([currentYear, currentStorm, currentMinors, currentMajors]);
         }
         console.log(data)
-        options.vAxis = { //???
+        options.vAxis = {
             viewWindow: {
                 min: 0
             }
@@ -207,13 +206,6 @@
             chart = new google.visualization.LineChart(document.getElementById('graphContainer'))
         }
         chart.draw(data, options)
-        if(showHurricane_12 == false && showHurricane_345 == false && showStorm == false){
-            // data = new google.visualization.DataTable();
-            // data.addColumn('number', 'Année');
-            // data.addRow(dataRows)
-
-            // chart.draw(data,options)
-        }
     };
 
     function GetHurricanesData() {
